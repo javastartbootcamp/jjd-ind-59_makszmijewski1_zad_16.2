@@ -22,13 +22,14 @@ public class Main {
         DateTimeFormatter datePattern = choosePattern(date);
         if (datePattern != null) {
             LocalDateTime createdDate = LocalDateTime.parse(date, datePattern);
-            showTimeInDifferentZones(createdDate, datePattern);
+            showTimeInDifferentZones(createdDate);
         } else {
             System.out.println("podałeś zły format daty");
         }
     }
 
-    private void showTimeInDifferentZones(LocalDateTime createdDate, DateTimeFormatter datePattern) {
+    private void showTimeInDifferentZones(LocalDateTime createdDate) {
+        DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ZonedDateTime ldtZoned = createdDate.atZone(ZoneId.systemDefault());
         ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
         ZonedDateTime londonZoned = ldtZoned.withZoneSameInstant(ZoneId.of("Europe/London"));
