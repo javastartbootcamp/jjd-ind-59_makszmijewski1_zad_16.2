@@ -22,48 +22,30 @@ public class Main {
         DateTimeFormatter datePattern = choosePattern(date);
         if (datePattern != null) {
             LocalDateTime createdDate = LocalDateTime.parse(date, datePattern);
-            showTimeInDifferentZones(createdDate);
+            showTimeInDifferentZones(createdDate, datePattern);
         } else {
             System.out.println("podałeś zły format daty");
         }
     }
 
-    private void showTimeInDifferentZones(LocalDateTime createdDate) {
+    private void showTimeInDifferentZones(LocalDateTime createdDate, DateTimeFormatter datePattern) {
         ZonedDateTime ldtZoned = createdDate.atZone(ZoneId.systemDefault());
         ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
         ZonedDateTime londonZoned = ldtZoned.withZoneSameInstant(ZoneId.of("Europe/London"));
         ZonedDateTime losAngelesZoned = ldtZoned.withZoneSameInstant(ZoneId.of("America/Los_Angeles"));
         ZonedDateTime sydneyZoned = ldtZoned.withZoneSameInstant(ZoneId.of("Australia/Sydney"));
 
-        String currentTime;
-        String utcTime;
-        String londonTime;
-        String losAngelesTime;
-        String sydneyTime;
-
-        if (ldtZoned.getMinute() == 0) {
-            currentTime = timeAsString(ldtZoned, 16) + ":00";
-            utcTime = timeAsString(utcZoned, 16) + ":00";
-            londonTime = timeAsString(londonZoned, 16) + ":00";
-            losAngelesTime = timeAsString(losAngelesZoned, 16) + ":00";
-            sydneyTime = timeAsString(sydneyZoned, 16) + ":00";
-        } else {
-            currentTime = timeAsString(ldtZoned, 19);
-            utcTime = timeAsString(utcZoned, 19);
-            londonTime = timeAsString(londonZoned, 19);
-            losAngelesTime = timeAsString(losAngelesZoned, 19);
-            sydneyTime = timeAsString(sydneyZoned, 19);
-        }
+        String currentTime = ldtZoned.format(datePattern);
+        String utcTime = utcZoned.format(datePattern);
+        String londonTime = londonZoned.format(datePattern);
+        String losAngelesTime = losAngelesZoned.format(datePattern);
+        String sydneyTime = sydneyZoned.format(datePattern);
 
         System.out.println("Czas lokalny: " + currentTime);
         System.out.println("UTC: " + utcTime);
         System.out.println("Londyn: " + londonTime);
         System.out.println("Los Angeles: " + losAngelesTime);
         System.out.println("Sydney: " + sydneyTime);
-    }
-
-    private String timeAsString(ZonedDateTime zonedTime, int whereCut) {
-        return zonedTime.toString().replace("T", " ").substring(0, whereCut);
     }
 
     private DateTimeFormatter choosePattern(String date) {
